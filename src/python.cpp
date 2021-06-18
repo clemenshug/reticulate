@@ -1964,6 +1964,11 @@ SEXP main_process_python_info_unix() {
     loadSymbol(pLib, "Py_GetProgramFullPath", (void**) &Py_GetProgramFullPath);
     const std::wstring wide_python_path(Py_GetProgramFullPath());
     python_path = to_string(wide_python_path);
+    // don't use Python version attached by PythonEmbedInR
+    // since it's not compatible
+    if (python_path.find("PythonEmbedInR") == std::string::npos) {
+      return R_NilValue;
+    }
     info["python"] = python_path;
   } else {
     loadSymbol(pLib, "Py_GetProgramFullPath", (void**) &Py_GetProgramFullPath_v2);
